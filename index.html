@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>디자인 조직 정기회의 아젠다</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0a;
+    --surface: #141414;
+    --border: #222;
+    --text: #f0f0f0;
+    --text-dim: #888;
+    --accent: #6366f1;
+    --accent-glow: rgba(99, 102, 241, 0.15);
+    --green: #22c55e;
+    --amber: #f59e0b;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Noto Sans KR', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── Nav ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    backdrop-filter: blur(20px);
+    background: rgba(10,10,10,0.75);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 40px; height: 56px;
+    font-size: 13px; color: var(--text-dim);
+  }
+  nav .logo { font-weight: 700; color: var(--text); letter-spacing: -0.5px; }
+  nav .dots { display: flex; gap: 6px; }
+  nav .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--border); cursor: pointer;
+    transition: background 0.3s;
+  }
+  nav .dot.active { background: var(--accent); }
+
+  /* ── Slide container ── */
+  .slides { padding-top: 56px; }
+
+  section {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 80px 40px;
+    position: relative;
+  }
+
+  .slide-inner {
+    max-width: 840px; width: 100%;
+  }
+
+  /* ── Typography ── */
+  .kicker {
+    font-size: 13px; font-weight: 500; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-size: clamp(36px, 5vw, 56px);
+    font-weight: 900; line-height: 1.2;
+    letter-spacing: -1.5px;
+    margin-bottom: 24px;
+  }
+
+  h2 {
+    font-size: clamp(28px, 3.5vw, 42px);
+    font-weight: 700; line-height: 1.25;
+    letter-spacing: -1px;
+    margin-bottom: 20px;
+  }
+
+  .subtitle {
+    font-size: 18px; color: var(--text-dim);
+    font-weight: 300; max-width: 600px;
+    margin-bottom: 40px;
+  }
+
+  .highlight { color: var(--accent); }
+  .highlight-green { color: var(--green); }
+  .highlight-amber { color: var(--amber); }
+
+  /* ── Cards ── */
+  .card-grid {
+    display: grid; gap: 16px;
+    margin-top: 32px;
+  }
+  .card-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 24px;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .card:hover {
+    border-color: #333;
+    transform: translateY(-2px);
+  }
+  .card .icon {
+    font-size: 28px; margin-bottom: 12px;
+    display: block;
+  }
+  .card h3 {
+    font-size: 16px; font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .card p {
+    font-size: 14px; color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  /* ── Quote block ── */
+  .quote-block {
+    background: var(--accent-glow);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 12px 12px 0;
+    padding: 28px 32px;
+    margin: 32px 0;
+    font-size: 20px; font-weight: 500;
+    line-height: 1.5;
+  }
+
+  /* ── List items ── */
+  .item-list {
+    list-style: none; margin-top: 24px;
+  }
+  .item-list li {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: flex-start; gap: 14px;
+    font-size: 17px;
+  }
+  .item-list li:last-child { border-bottom: none; }
+  .item-list .bullet {
+    width: 8px; height: 8px; min-width: 8px;
+    border-radius: 50%; background: var(--accent);
+    margin-top: 10px;
+  }
+
+  /* ── Number badges ── */
+  .num-badge {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px; border-radius: 10px;
+    background: var(--accent); color: #fff;
+    font-size: 16px; font-weight: 700;
+    margin-bottom: 14px;
+  }
+
+  /* ── Divider ── */
+  .divider-section {
+    background: linear-gradient(135deg, var(--accent) 0%, #8b5cf6 100%);
+  }
+  .divider-section h2 { color: #fff; }
+  .divider-section .subtitle { color: rgba(255,255,255,0.7); }
+
+  /* ── Tag ── */
+  .tag {
+    display: inline-block;
+    padding: 4px 12px; border-radius: 20px;
+    font-size: 12px; font-weight: 600;
+    background: var(--accent-glow); color: var(--accent);
+    margin-bottom: 16px;
+  }
+  .tag.green { background: rgba(34,197,94,0.12); color: var(--green); }
+  .tag.amber { background: rgba(245,158,11,0.12); color: var(--amber); }
+
+  /* ── CTA / Closing ── */
+  .cta-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 48px 40px;
+    text-align: center;
+    margin-top: 40px;
+  }
+  .cta-box h3 {
+    font-size: 22px; font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .cta-box p {
+    font-size: 15px; color: var(--text-dim);
+    max-width: 480px; margin: 0 auto;
+  }
+
+  /* ── Scroll fade-in ── */
+  .fade-up {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-up.visible {
+    opacity: 1; transform: translateY(0);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    section { padding: 60px 24px; }
+    .card-grid.cols-2 { grid-template-columns: 1fr; }
+    nav { padding: 0 20px; }
+  }
+
+  /* ── Progress bar ── */
+  #progress {
+    position: fixed; top: 56px; left: 0; height: 2px;
+    background: var(--accent); z-index: 101;
+    width: 0%; transition: width 0.2s;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="logo">Product Design Team</span>
+  <div class="dots" id="nav-dots"></div>
+  <span>2026 상반기</span>
+</nav>
+<div id="progress"></div>
+
+<div class="slides">
+
+  <!-- Slide 0: Cover -->
+  <section>
+    <div class="slide-inner fade-up">
+      <div class="kicker">Product Design Organization</div>
+      <h1>직무의 경계가 사라지는 시대,<br><span class="highlight">우리가 준비할 것</span></h1>
+      <p class="subtitle">디자인 조직 정기회의 아젠다 공유</p>
+    </div>
+  </section>
+
+  <!-- Slide 1: Context -->
+  <section>
+    <div class="slide-inner fade-up">
+      <div class="tag">Context</div>
+      <h2>올핸즈에서 이야기한 것처럼</h2>
+      <p class="subtitle">시간이 지나면서 직무 간 경계는 점점 사라지고,<br>통합되는 방향으로 가고 있습니다.</p>
+      <div class="quote-block">
+        앞으로 우리 프로덕트 직군이<br>준비해야 할 역량은 크게 <span class="highlight">두 가지</span>입니다.
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 2: 두 가지 역량 -->
+  <section>
+    <div class="slide-inner fade-up">
+      <div class="kicker">Core Competencies</div>
+      <h2>프로덕트 직군의 <span class="highlight">두 가지 역량</span></h2>
+      <div class="card-grid cols-2" style="margin-top:36px;">
+        <div class="card">
+          <div class="num-badge">1</div>
+          <h3>프로덕트 역량</h3>
+          <p>목표 달성을 위한 정보력과 실행력. 유저에게 가장 큰 임팩트를 만드는 능력.</p>
+        </div>
+        <div class="card">
+          <div class="num-badge">2</div>
+          <h3>AI 활용 역량</h3>
+          <p>AI를 얼마나 더 잘 활용하는가. 도구를 만드는 것 자체가 프로덕트 역량.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 3: 프로덕트 역량 상세 -->
+  <section>
+    <div class="slide-inner fade-up">
+      <div class="tag green">역량 1</div>
+      <h2>프로덕트 역량이란</h2>
+      <p class="subtitle">결국 다음 질문에 답할 수 있는 능력입니다.</p>
+      <ul class="item-list">
+        <li>
+          <span class="bullet"></span>
+          <span>우리 조직의 <strong>목표 달성에 필요한 정보</strong>를 누가 더 많이 알고 있는가</span>
+        </li>
+        <li>
+          <span class="bullet"></span>
+          <span>그 정보를 바탕으로 <strong>가장 빠르고 쉽게 시도</strong>해볼 수 있는 것은 무엇인가</span>
+        </li>
+        <li>
+          <span class="bullet"></span>
+          <span><strong>유저 입장에서 가장 임팩트가 큰 것</strong>은 무엇인가</span>
+        </li>
+        <li>
+          <span class="bullet"></span>
+          <span><strong>이해관계자</strong>에게 가장 중요한 것은 무엇인가</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Slide 4: Divider — AI -->
+  <section class="divider-section">
+    <div class="slide-inner fade-up" style="text-align:center;">
+      <h2 style="font-size:clamp(32px,4.5vw,52px);">그리고 더 중요한 것은</h2>
+      <p class="subtitle" style="margin:20px auto 0; max-width:500px;">
+        AI를 얼마나 더 <strong style="color:#fff;">잘 활용하는가</strong>
+      </p>
+    </div>
+  </section>
+
+  <!-- Slide 5: 액션 아이템 -->
+  <section>
+    <div class="slide-inner fade-up">
+      <div class="tag amber">Action Item</div>
+      <h2>리소스를 줄이는<br><span class="highlight-amber">AI 워크플로우</span>를 만들어보세요</h2>
+      <p class="subtitle">각자 자신의 과업에서 하나씩</p>
+      <div class="card-grid cols-2">
+        <div class="card">
+          <span class="icon">🔍</span>
+          <h3>리서치 정리 자동화</h3>
+          <p>사용자 리서치, 경쟁사 분석 등을 자동으로 구조화</p>
+        </div>
+        <div class="card">
+          <span class="icon">📝</span>
+          <h3>PRD 작성 보조</h3>
+          <p>요구사항 문서 초안 생성 및 템플릿 자동화</p>
+        </div>
+        <div class="card">
+          <span class="icon">🎨</span>
+          <h3>디자인 검토 보조</h3>
+          <p>디자인 크리틱, 체크리스트 기반 품질 검토</p>
+        </div>
+        <div class="card">
+          <span class="icon">📊</span>
+          <h3>데이터 해석 / 반복 작업</h3>
+          <p>지표 분석 자동화, 반복 업무 효율화</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 6: 블로그 공유 -->
+  <section>
+    <div class="slide-inner fade-up">
+      <div class="kicker">Outcome</div>
+      <h2>상반기 동안<br>각자의 사례를 <span class="highlight">블로그로 공유</span></h2>
+      <div class="quote-block">
+        워크플로우나 툴을 만드는 것 자체도<br>
+        <strong>프로덕트 역량</strong>입니다.
+      </div>
+      <p style="color:var(--text-dim); font-size:15px; margin-top:20px;">
+        각자가 만든 AI 워크플로우 활용 사례를 하나씩 정리하여 공유합니다.
+      </p>
+    </div>
+  </section>
+
+  <!-- Slide 7: 팀 운영 변화 Divider -->
+  <section class="divider-section">
+    <div class="slide-inner fade-up" style="text-align:center;">
+      <div class="kicker" style="color:rgba(255,255,255,0.6);">Team Operations</div>
+      <h2 style="font-size:clamp(32px,4.5vw,48px);">팀 운영 방식도<br>바꾸려고 합니다</h2>
+    </div>
+  </section>
+
+  <!-- Slide 8: 위클리 미팅 변경 -->
+  <section>
+    <div class="slide-inner fade-up">
+      <div class="tag">변경 1</div>
+      <h2>파트별 위클리 미팅 변경</h2>
+      <div class="card-grid">
+        <div class="card" style="border-color:#333; border-left:3px solid #ef4444;">
+          <h3 style="color:#ef4444;">없어지는 것</h3>
+          <p>각자의 과업을 공유하는 기존 위클리 미팅</p>
+        </div>
+        <div class="card" style="border-color:#333; border-left:3px solid var(--green);">
+          <h3 style="color:var(--green);">새롭게 바뀌는 것</h3>
+          <p>서로에게 도움이 되는 인사이트를 공유하는 미팅<br>
+          새로운 과업의 맥락을 먼저 공유하는 자리</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 9: 데일리 스크럼 -->
+  <section>
+    <div class="slide-inner fade-up">
+      <div class="tag">변경 2</div>
+      <h2>데일리 스크럼에서<br><span class="highlight">맥락 공유</span>를 적극적으로</h2>
+      <p class="subtitle">
+        새로운 과업이 생겼을 때, 배경과 맥락을 먼저 공유하는 것이 중요합니다.
+      </p>
+      <div class="quote-block">
+        데일리 스크럼에서 맥락 공유를<br>적극적으로 해주세요.
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 10: Closing -->
+  <section>
+    <div class="slide-inner fade-up" style="text-align:center;">
+      <div class="kicker">Summary</div>
+      <h2>정리하면</h2>
+      <div class="card-grid" style="margin-top:32px; text-align:left;">
+        <div class="card">
+          <span class="icon">💡</span>
+          <h3>프로덕트 역량 + AI 활용 역량</h3>
+          <p>직무의 경계가 사라지는 시대, 두 가지를 함께 키워야 합니다.</p>
+        </div>
+        <div class="card">
+          <span class="icon">⚡</span>
+          <h3>AI 워크플로우 1개 만들기</h3>
+          <p>각자 과업에서 리소스를 줄이는 워크플로우를 하나씩 만들어보세요.</p>
+        </div>
+        <div class="card">
+          <span class="icon">✍️</span>
+          <h3>상반기 블로그 공유</h3>
+          <p>만든 워크플로우 사례를 블로그로 정리하여 공유합니다.</p>
+        </div>
+        <div class="card">
+          <span class="icon">🔄</span>
+          <h3>미팅 방식 변경</h3>
+          <p>위클리는 인사이트 공유로, 데일리에서는 맥락 공유를 적극적으로.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  // Fade-in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) e.target.classList.add('visible');
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Nav dots
+  const sections = document.querySelectorAll('section');
+  const dotsContainer = document.getElementById('nav-dots');
+  sections.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot';
+    dot.addEventListener('click', () => sections[i].scrollIntoView({ behavior: 'smooth' }));
+    dotsContainer.appendChild(dot);
+  });
+
+  // Progress bar + active dot
+  const progress = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.width = (scrollTop / docHeight * 100) + '%';
+
+    const dots = dotsContainer.querySelectorAll('.dot');
+    let current = 0;
+    sections.forEach((sec, i) => {
+      if (scrollTop >= sec.offsetTop - window.innerHeight / 2) current = i;
+    });
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+  });
+
+  // Trigger initial
+  window.dispatchEvent(new Event('scroll'));
+</script>
+
+</body>
+</html>
